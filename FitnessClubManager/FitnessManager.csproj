@@ -172,6 +172,7 @@
     <Compile Include="ChatBotForm.Designer.cs">
       <DependentUpon>ChatBotForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="DataExportHelper.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="LoginForm.cs">
@@ -194,11 +195,23 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportsForm.Designer.cs">
+      <DependentUpon>ReportsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReportViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ReportViewerForm.Designer.cs">
       <DependentUpon>ReportViewerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScheduleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScheduleForm.Designer.cs">
+      <DependentUpon>ScheduleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SecurityServices.cs" />
     <Compile Include="SubscriptionsForm.cs">
@@ -218,6 +231,12 @@
     </Compile>
     <Compile Include="TrainerRatingForm.Designer.cs">
       <DependentUpon>TrainerRatingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrainersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrainersForm.Designer.cs">
+      <DependentUpon>TrainersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="VisitStatisticsForm.cs">
       <SubType>Form</SubType>
