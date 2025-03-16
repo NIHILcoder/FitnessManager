@@ -151,6 +151,7 @@
             this.Name = "TrainerRatingForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Оценка тренера";
+            this.Load += new System.EventHandler(this.TrainerRatingForm_Load);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.ResumeLayout(false);

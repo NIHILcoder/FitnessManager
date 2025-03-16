@@ -16,7 +16,7 @@ namespace FitnessManager
         private PictureBox[] stars;
         private int currentRating = 0;
 
-        // Изображения для звезд - создаем вручную вместо ресурсов
+        // Изображения для звезд
         private Image starEmpty;
         private Image starFilled;
 
@@ -30,23 +30,27 @@ namespace FitnessManager
 
             lblTrainerName.Text = trainerName;
 
-            // Создаем изображения программно вместо использования ресурсов
-            CreateStarImages();
+            // Загружаем изображения для звезд из ресурсов
+            try
+            {
+                starEmpty = Properties.Resources.starEmpty;
+                starFilled = Properties.Resources.starFilled;
+            }
+            catch
+            {
+                // Если ресурсы недоступны, создаем изображения программно
+                starEmpty = CreateEmptyStarImage();
+                starFilled = CreateFilledStarImage();
+            }
+        }
 
+        private void TrainerRatingForm_Load(object sender, EventArgs e)
+        {
             // Инициализируем звезды
             InitializeStars();
 
             // Загружаем существующий рейтинг, если есть
             LoadCurrentRating();
-        }
-
-        private void CreateStarImages()
-        {
-            // Создаем пустую звезду (контур)
-            starEmpty = CreateEmptyStarImage();
-
-            // Создаем заполненную звезду
-            starFilled = CreateFilledStarImage();
         }
 
         private Image CreateEmptyStarImage()
@@ -114,7 +118,7 @@ namespace FitnessManager
             {
                 stars[i] = new PictureBox();
                 stars[i].Size = new Size(32, 32);
-                stars[i].Location = new Point(50 + i * 40, 100);
+                stars[i].Location = new Point(50 + i * 40, 10);
                 stars[i].SizeMode = PictureBoxSizeMode.Zoom;
                 stars[i].Image = starEmpty;
                 stars[i].Tag = i + 1; // Сохраняем значение рейтинга (1-5)

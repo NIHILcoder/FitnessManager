@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -342,6 +341,59 @@ namespace FitnessManager
                 MessageBox.Show($"Ошибка при выполнении автопродления: {ex.Message}", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            // Получаем таблицу с данными для экспорта
+            DataTable dt = dgvSubscriptions.DataSource as DataTable;
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                MessageBox.Show("Нет данных для экспорта", "Информация",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Создаем новую форму для выбора формата экспорта
+            Form exportForm = new Form();
+            exportForm.Text = "Выберите формат экспорта";
+            exportForm.Size = new Size(300, 200);
+            exportForm.StartPosition = FormStartPosition.CenterParent;
+            exportForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            exportForm.MaximizeBox = false;
+            exportForm.MinimizeBox = false;
+
+            Button btnExportText = new Button();
+            btnExportText.Text = "Текстовый файл (TXT)";
+            btnExportText.Location = new Point(75, 20);
+            btnExportText.Size = new Size(150, 30);
+            btnExportText.Click += (s, args) => {
+                DataExportHelper.ExportToTxt(dt, "Абонементы клиентов");
+                exportForm.Close();
+            };
+
+            Button btnExportExcel = new Button();
+            btnExportExcel.Text = "Excel (XLSX)";
+            btnExportExcel.Location = new Point(75, 60);
+            btnExportExcel.Size = new Size(150, 30);
+            btnExportExcel.Click += (s, args) => {
+                DataExportHelper.ExportToExcel(dt, "Абонементы клиентов");
+                exportForm.Close();
+            };
+
+            Button btnExportPdf = new Button();
+            btnExportPdf.Text = "PDF";
+            btnExportPdf.Location = new Point(75, 100);
+            btnExportPdf.Size = new Size(150, 30);
+            btnExportPdf.Click += (s, args) => {
+                DataExportHelper.ExportToPdf(dt, "Абонементы клиентов");
+                exportForm.Close();
+            };
+
+            exportForm.Controls.Add(btnExportText);
+            exportForm.Controls.Add(btnExportExcel);
+            exportForm.Controls.Add(btnExportPdf);
+            exportForm.ShowDialog();
         }
     }
 }
