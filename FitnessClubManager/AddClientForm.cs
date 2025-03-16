@@ -9,16 +9,38 @@ namespace FitnessManager
         private string connectionString = DBConnection.ConnectionString;
         private int userId = 0; // 0 означает, что это новый клиент
 
+        // Enum для уровней активности
+        public enum ActivityLevel
+        {
+            Низкий,
+            Средний,
+            Высокий,
+            Профессиональный
+        }
+
         public AddClientForm()
         {
             InitializeComponent();
+            InitializeActivityLevels();
         }
 
         // Конструктор для редактирования клиента
         public AddClientForm(int clientId)
         {
             InitializeComponent();
+            InitializeActivityLevels();
             LoadClientData(clientId);
+        }
+
+        // Инициализация комбобокса с уровнями активности
+        private void InitializeActivityLevels()
+        {
+            cmbActivityLevel.Items.Clear();
+            foreach (ActivityLevel level in Enum.GetValues(typeof(ActivityLevel)))
+            {
+                cmbActivityLevel.Items.Add(level.ToString());
+            }
+            cmbActivityLevel.SelectedIndex = 1; // По умолчанию средний уровень
         }
 
         private void LoadClientData(int clientId)
@@ -29,7 +51,7 @@ namespace FitnessManager
                 {
                     connection.Open();
                     string query = @"SELECT c.LastName, c.FirstName, c.MiddleName, c.BirthDate, 
-                                    c.Phone, c.Email, c.UserID
+                                    c.Phone, c.Email, c.UserID, c.ActivityLevel, c.Notes
                                     FROM Clients c
                                     WHERE c.ClientID = @ClientID";
 
@@ -48,6 +70,20 @@ namespace FitnessManager
                                 txtPhone.Text = reader["Phone"].ToString();
                                 txtEmail.Text = reader["Email"].ToString();
                                 userId = Convert.ToInt32(reader["UserID"]);
+
+                                // Загружаем дополнительные поля
+                                if (!reader.IsDBNull(reader.GetOrdinal("ActivityLevel")))
+                                {
+                                    string activityLevel = reader["ActivityLevel"].ToString();
+                                    int index = cmbActivityLevel.FindStringExact(activityLevel);
+                                    if (index >= 0)
+                                        cmbActivityLevel.SelectedIndex = index;
+                                }
+
+                                if (!reader.IsDBNull(reader.GetOrdinal("Notes")))
+                                {
+                                    rtbNotes.Text = reader["Notes"].ToString();
+                                }
 
                                 this.Text = "Редактирование клиента";
                                 btnSave.Text = "Сохранить изменения";
@@ -126,15 +162,15 @@ namespace FitnessManager
                         // Обновляем данные клиента
                         query = @"UPDATE Clients 
                                 SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName,
-                                BirthDate = @BirthDate, Phone = @Phone, Email = @Email
+                                BirthDate = @BirthDate, Phone = @Phone, Email = @Email, ActivityLevel = @ActivityLevel, Notes = @Notes
                                 WHERE UserID = @UserID";
                     }
                     else
                     {
                         // Добавляем нового клиента
                         query = @"INSERT INTO Clients 
-                                (UserID, LastName, FirstName, MiddleName, BirthDate, Phone, Email, RegistrationDate)
-                                VALUES (@UserID, @LastName, @FirstName, @MiddleName, @BirthDate, @Phone, @Email, CURRENT_DATE)";
+                                (UserID, LastName, FirstName, MiddleName, BirthDate, Phone, Email, RegistrationDate, ActivityLevel, Notes)
+                                VALUES (@UserID, @LastName, @FirstName, @MiddleName, @BirthDate, @Phone, @Email, CURRENT_DATE, @ActivityLevel, @Notes)";
                     }
 
                     using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
@@ -146,9 +182,14 @@ namespace FitnessManager
                         command.Parameters.AddWithValue("@BirthDate", dtpBirthDate.Value);
                         command.Parameters.AddWithValue("@Phone", txtPhone.Text.Trim());
                         command.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+                        command.Parameters.AddWithValue("@ActivityLevel", cmbActivityLevel.SelectedItem?.ToString());
+                        command.Parameters.AddWithValue("@Notes", rtbNotes.Text.Trim());
 
                         command.ExecuteNonQuery();
                     }
+
+                    // Логирование изменений
+                    LogClientChange(userId, this.Text.Contains("Редактирование") ? "Update" : "Create");
 
                     MessageBox.Show("Данные успешно сохранены", "Информация",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -164,6 +205,34 @@ namespace FitnessManager
             }
         }
 
+        // Метод для логирования изменений клиента
+        private void LogClientChange(int userId, string changeType)
+        {
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"INSERT INTO client_history (client_id, change_date, change_type, changed_by)
+                                    VALUES ((SELECT ClientID FROM Clients WHERE UserID = @UserID), CURRENT_TIMESTAMP, @ChangeType, @ChangedBy)";
+
+                    using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@UserID", userId);
+                        command.Parameters.AddWithValue("@ChangeType", changeType);
+                        command.Parameters.AddWithValue("@ChangedBy", ModernMainForm.CurrentUserID); // Передаем ID текущего пользователя
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // В данном случае просто логируем ошибку, но не прерываем основную операцию
+                Console.WriteLine($"Error logging client change: {ex.Message}");
+            }
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -174,6 +243,58 @@ namespace FitnessManager
         {
             // Показываем или скрываем панель создания учетной записи
             panelAccount.Visible = chkCreateAccount.Checked;
+        }
+
+        // Новые методы для работы с заметками
+        private void btnFormatBold_Click(object sender, EventArgs e)
+        {
+            // Применяем жирный шрифт к выделенному тексту
+            if (rtbNotes.SelectionFont != null)
+            {
+                System.Drawing.Font currentFont = rtbNotes.SelectionFont;
+                System.Drawing.FontStyle newFontStyle;
+
+                if (currentFont.Bold)
+                    newFontStyle = currentFont.Style & ~System.Drawing.FontStyle.Bold;
+                else
+                    newFontStyle = currentFont.Style | System.Drawing.FontStyle.Bold;
+
+                rtbNotes.SelectionFont = new System.Drawing.Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
+            }
+        }
+
+        private void btnFormatItalic_Click(object sender, EventArgs e)
+        {
+            // Применяем курсив к выделенному тексту
+            if (rtbNotes.SelectionFont != null)
+            {
+                System.Drawing.Font currentFont = rtbNotes.SelectionFont;
+                System.Drawing.FontStyle newFontStyle;
+
+                if (currentFont.Italic)
+                    newFontStyle = currentFont.Style & ~System.Drawing.FontStyle.Italic;
+                else
+                    newFontStyle = currentFont.Style | System.Drawing.FontStyle.Italic;
+
+                rtbNotes.SelectionFont = new System.Drawing.Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
+            }
+        }
+
+        private void btnFormatUnderline_Click(object sender, EventArgs e)
+        {
+            // Применяем подчеркивание к выделенному тексту
+            if (rtbNotes.SelectionFont != null)
+            {
+                System.Drawing.Font currentFont = rtbNotes.SelectionFont;
+                System.Drawing.FontStyle newFontStyle;
+
+                if (currentFont.Underline)
+                    newFontStyle = currentFont.Style & ~System.Drawing.FontStyle.Underline;
+                else
+                    newFontStyle = currentFont.Style | System.Drawing.FontStyle.Underline;
+
+                rtbNotes.SelectionFont = new System.Drawing.Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
+            }
         }
     }
 }

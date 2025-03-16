@@ -48,7 +48,17 @@
             this.txtLogin = new System.Windows.Forms.TextBox();
             this.lblPassword = new System.Windows.Forms.Label();
             this.lblLogin = new System.Windows.Forms.Label();
+            this.lblActivityLevel = new System.Windows.Forms.Label();
+            this.cmbActivityLevel = new System.Windows.Forms.ComboBox();
+            this.gbNotes = new System.Windows.Forms.GroupBox();
+            this.rtbNotes = new System.Windows.Forms.RichTextBox();
+            this.panelFormatting = new System.Windows.Forms.Panel();
+            this.btnFormatUnderline = new System.Windows.Forms.Button();
+            this.btnFormatItalic = new System.Windows.Forms.Button();
+            this.btnFormatBold = new System.Windows.Forms.Button();
             this.panelAccount.SuspendLayout();
+            this.gbNotes.SuspendLayout();
+            this.panelFormatting.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblLastName
@@ -154,7 +164,7 @@
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(94, 440);
+            this.btnSave.Location = new System.Drawing.Point(94, 640);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(150, 40);
             this.btnSave.TabIndex = 12;
@@ -166,7 +176,7 @@
             // 
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Location = new System.Drawing.Point(260, 440);
+            this.btnCancel.Location = new System.Drawing.Point(260, 640);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(150, 40);
             this.btnCancel.TabIndex = 13;
@@ -177,7 +187,7 @@
             // chkCreateAccount
             // 
             this.chkCreateAccount.AutoSize = true;
-            this.chkCreateAccount.Location = new System.Drawing.Point(177, 270);
+            this.chkCreateAccount.Location = new System.Drawing.Point(177, 310);
             this.chkCreateAccount.Name = "chkCreateAccount";
             this.chkCreateAccount.Size = new System.Drawing.Size(216, 27);
             this.chkCreateAccount.TabIndex = 14;
@@ -191,9 +201,9 @@
             this.panelAccount.Controls.Add(this.txtLogin);
             this.panelAccount.Controls.Add(this.lblPassword);
             this.panelAccount.Controls.Add(this.lblLogin);
-            this.panelAccount.Location = new System.Drawing.Point(25, 310);
+            this.panelAccount.Location = new System.Drawing.Point(25, 343);
             this.panelAccount.Name = "panelAccount";
-            this.panelAccount.Size = new System.Drawing.Size(450, 110);
+            this.panelAccount.Size = new System.Drawing.Size(450, 95);
             this.panelAccount.TabIndex = 15;
             this.panelAccount.Visible = false;
             // 
@@ -230,12 +240,97 @@
             this.lblLogin.TabIndex = 16;
             this.lblLogin.Text = "Логин:";
             // 
+            // lblActivityLevel
+            // 
+            this.lblActivityLevel.AutoSize = true;
+            this.lblActivityLevel.Location = new System.Drawing.Point(25, 265);
+            this.lblActivityLevel.Name = "lblActivityLevel";
+            this.lblActivityLevel.Size = new System.Drawing.Size(148, 23);
+            this.lblActivityLevel.TabIndex = 16;
+            this.lblActivityLevel.Text = "Уровень активности:";
+            // 
+            // cmbActivityLevel
+            // 
+            this.cmbActivityLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbActivityLevel.FormattingEnabled = true;
+            this.cmbActivityLevel.Location = new System.Drawing.Point(177, 262);
+            this.cmbActivityLevel.Name = "cmbActivityLevel";
+            this.cmbActivityLevel.Size = new System.Drawing.Size(280, 31);
+            this.cmbActivityLevel.TabIndex = 17;
+            // 
+            // gbNotes
+            // 
+            this.gbNotes.Controls.Add(this.rtbNotes);
+            this.gbNotes.Controls.Add(this.panelFormatting);
+            this.gbNotes.Location = new System.Drawing.Point(25, 444);
+            this.gbNotes.Name = "gbNotes";
+            this.gbNotes.Size = new System.Drawing.Size(450, 180);
+            this.gbNotes.TabIndex = 18;
+            this.gbNotes.TabStop = false;
+            this.gbNotes.Text = "Заметки (медицинские ограничения, предпочтения)";
+            // 
+            // rtbNotes
+            // 
+            this.rtbNotes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbNotes.Location = new System.Drawing.Point(3, 63);
+            this.rtbNotes.Name = "rtbNotes";
+            this.rtbNotes.Size = new System.Drawing.Size(444, 114);
+            this.rtbNotes.TabIndex = 1;
+            this.rtbNotes.Text = "";
+            // 
+            // panelFormatting
+            // 
+            this.panelFormatting.Controls.Add(this.btnFormatUnderline);
+            this.panelFormatting.Controls.Add(this.btnFormatItalic);
+            this.panelFormatting.Controls.Add(this.btnFormatBold);
+            this.panelFormatting.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelFormatting.Location = new System.Drawing.Point(3, 26);
+            this.panelFormatting.Name = "panelFormatting";
+            this.panelFormatting.Size = new System.Drawing.Size(444, 37);
+            this.panelFormatting.TabIndex = 0;
+            // 
+            // btnFormatUnderline
+            // 
+            this.btnFormatUnderline.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnFormatUnderline.Location = new System.Drawing.Point(83, 3);
+            this.btnFormatUnderline.Name = "btnFormatUnderline";
+            this.btnFormatUnderline.Size = new System.Drawing.Size(32, 32);
+            this.btnFormatUnderline.TabIndex = 2;
+            this.btnFormatUnderline.Text = "U";
+            this.btnFormatUnderline.UseVisualStyleBackColor = true;
+            this.btnFormatUnderline.Click += new System.EventHandler(this.btnFormatUnderline_Click);
+            // 
+            // btnFormatItalic
+            // 
+            this.btnFormatItalic.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnFormatItalic.Location = new System.Drawing.Point(45, 3);
+            this.btnFormatItalic.Name = "btnFormatItalic";
+            this.btnFormatItalic.Size = new System.Drawing.Size(32, 32);
+            this.btnFormatItalic.TabIndex = 1;
+            this.btnFormatItalic.Text = "I";
+            this.btnFormatItalic.UseVisualStyleBackColor = true;
+            this.btnFormatItalic.Click += new System.EventHandler(this.btnFormatItalic_Click);
+            // 
+            // btnFormatBold
+            // 
+            this.btnFormatBold.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnFormatBold.Location = new System.Drawing.Point(7, 3);
+            this.btnFormatBold.Name = "btnFormatBold";
+            this.btnFormatBold.Size = new System.Drawing.Size(32, 32);
+            this.btnFormatBold.TabIndex = 0;
+            this.btnFormatBold.Text = "B";
+            this.btnFormatBold.UseVisualStyleBackColor = true;
+            this.btnFormatBold.Click += new System.EventHandler(this.btnFormatBold_Click);
+            // 
             // AddClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(484, 501);
+            this.ClientSize = new System.Drawing.Size(504, 701);
+            this.Controls.Add(this.gbNotes);
+            this.Controls.Add(this.cmbActivityLevel);
+            this.Controls.Add(this.lblActivityLevel);
             this.Controls.Add(this.panelAccount);
             this.Controls.Add(this.chkCreateAccount);
             this.Controls.Add(this.btnCancel);
@@ -262,6 +357,8 @@
             this.Text = "Добавление нового клиента";
             this.panelAccount.ResumeLayout(false);
             this.panelAccount.PerformLayout();
+            this.gbNotes.ResumeLayout(false);
+            this.panelFormatting.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -289,5 +386,13 @@
         private System.Windows.Forms.TextBox txtLogin;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.Label lblLogin;
+        private System.Windows.Forms.Label lblActivityLevel;
+        private System.Windows.Forms.ComboBox cmbActivityLevel;
+        private System.Windows.Forms.GroupBox gbNotes;
+        private System.Windows.Forms.RichTextBox rtbNotes;
+        private System.Windows.Forms.Panel panelFormatting;
+        private System.Windows.Forms.Button btnFormatUnderline;
+        private System.Windows.Forms.Button btnFormatItalic;
+        private System.Windows.Forms.Button btnFormatBold;
     }
 }

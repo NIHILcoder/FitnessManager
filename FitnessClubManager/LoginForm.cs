@@ -45,7 +45,7 @@ namespace FitnessManager
                                 int userId = reader.GetInt32(0);
                                 string role = reader.GetString(1);
 
-                                MainForm mainForm = new MainForm(userId, role);
+                                ModernMainForm mainForm = new ModernMainForm(userId, role);
                                 this.Hide();
                                 mainForm.FormClosed += (s, args) => this.Close();
                                 mainForm.Show();
