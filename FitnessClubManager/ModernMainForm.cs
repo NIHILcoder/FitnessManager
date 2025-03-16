@@ -170,7 +170,7 @@ namespace FitnessManager
 
         private void btnChat_Click(object sender, EventArgs e)
         {
-            // Открытие простого чат-бота
+            // Открытие чат-бота
             ChatBotForm chatForm = new ChatBotForm();
             chatForm.ShowDialog();
         }
@@ -185,146 +185,9 @@ namespace FitnessManager
         }
     }
 
-    // Простой класс чат-бота (заглушка)
-    public class ChatBotForm : Form
-    {
-        private RichTextBox rtbChat;
-        private TextBox txtMessage;
-        private Button btnSend;
+    // Временные заглушки для форм, которые будут реализованы позже
 
-        public ChatBotForm()
-        {
-            this.Text = "ActiveLife Чат-бот";
-            this.Size = new Size(500, 500);
-            this.StartPosition = FormStartPosition.CenterParent;
-
-            // Создаем элементы управления
-            rtbChat = new RichTextBox
-            {
-                Dock = DockStyle.Top,
-                Height = 400,
-                ReadOnly = true
-            };
-
-            Panel panelBottom = new Panel
-            {
-                Dock = DockStyle.Bottom,
-                Height = 50
-            };
-
-            txtMessage = new TextBox
-            {
-                Width = 350,
-                Location = new Point(10, 15),
-                Parent = panelBottom
-            };
-
-            btnSend = new Button
-            {
-                Text = "Отправить",
-                Width = 100,
-                Location = new Point(370, 14),
-                Parent = panelBottom
-            };
-
-            btnSend.Click += BtnSend_Click;
-
-            // Добавляем элементы на форму
-            this.Controls.Add(rtbChat);
-            this.Controls.Add(panelBottom);
-
-            // Приветственное сообщение
-            AddBotMessage("Здравствуйте! Я чат-бот фитнес-клуба ActiveLife. Чем могу помочь?");
-        }
-
-        private void BtnSend_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(txtMessage.Text))
-            {
-                AddUserMessage(txtMessage.Text);
-                ProcessUserMessage(txtMessage.Text);
-                txtMessage.Clear();
-            }
-        }
-
-        private void AddUserMessage(string message)
-        {
-            rtbChat.SelectionColor = Color.Blue;
-            rtbChat.AppendText($"Вы: {message}\n");
-        }
-
-        private void AddBotMessage(string message)
-        {
-            rtbChat.SelectionColor = Color.Green;
-            rtbChat.AppendText($"Бот: {message}\n");
-        }
-
-        private void ProcessUserMessage(string message)
-        {
-            // Очень простая логика ответов
-            message = message.ToLower();
-
-            if (message.Contains("привет") || message.Contains("здравствуй"))
-            {
-                AddBotMessage("Здравствуйте! Чем могу помочь?");
-            }
-            else if (message.Contains("расписание") || message.Contains("занятия"))
-            {
-                AddBotMessage("Расписание занятий доступно в соответствующем разделе приложения. Также вы можете уточнить его у администратора.");
-            }
-            else if (message.Contains("абонемент") || message.Contains("стоимость"))
-            {
-                AddBotMessage("У нас есть различные типы абонементов. Базовый от 2000 руб., Стандарт от 3500 руб., Премиум от 5000 руб. Подробности у администратора.");
-            }
-            else if (message.Contains("тренер") || message.Contains("персональ"))
-            {
-                AddBotMessage("Персональные тренировки можно заказать у любого из наших тренеров. Стоимость от 1000 руб. за тренировку.");
-            }
-            else
-            {
-                AddBotMessage("Извините, я не совсем понял ваш вопрос. Попробуйте переформулировать или обратитесь к администратору клуба.");
-            }
-        }
-    }
-
-    // Заглушки для остальных форм, которые будут реализованы позже
-    public class SubscriptionsForm : Form
-    {
-        public SubscriptionsForm(string userRole)
-        {
-            this.Text = "Абонементы";
-
-            Panel headerPanel = new Panel()
-            {
-                Dock = DockStyle.Top,
-                Height = 60,
-                BackColor = Color.FromArgb(46, 204, 113)
-            };
-
-            Label titleLabel = new Label()
-            {
-                Text = "АБОНЕМЕНТЫ",
-                Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Location = new Point(20, 14),
-                Parent = headerPanel
-            };
-
-            this.Controls.Add(headerPanel);
-
-            Label notImplementedLabel = new Label()
-            {
-                Text = "Эта форма находится в разработке",
-                Font = new Font("Segoe UI", 12, FontStyle.Regular),
-                AutoSize = true,
-                Location = new Point(300, 300)
-            };
-
-            this.Controls.Add(notImplementedLabel);
-        }
-    }
-
+    // Заглушка для ScheduleForm
     public class ScheduleForm : Form
     {
         public ScheduleForm(string userRole)
@@ -362,6 +225,7 @@ namespace FitnessManager
         }
     }
 
+    // Заглушка для TrainersForm
     public class TrainersForm : Form
     {
         public TrainersForm(string userRole)
@@ -399,6 +263,7 @@ namespace FitnessManager
         }
     }
 
+    // Заглушка для ReportsForm
     public class ReportsForm : Form
     {
         public ReportsForm(string userRole)

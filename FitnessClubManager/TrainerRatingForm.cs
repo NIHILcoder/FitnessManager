@@ -30,17 +30,54 @@ namespace FitnessManager
 
             lblTrainerName.Text = trainerName;
 
-            // Загружаем изображения для звезд из ресурсов
+            // Загружаем изображения для звезд из ресурсов или создаем программно
             try
             {
-                starEmpty = Properties.Resources.starEmpty;
-                starFilled = Properties.Resources.starFilled;
+                // Вместо использования Properties.Resources напрямую
+                // загружаем изображения из файлов ресурсов, если они доступны
+                starEmpty = LoadStarImage("Star-empty.png");
+                starFilled = LoadStarImage("Plain_Yellow_Star.png");
             }
             catch
             {
                 // Если ресурсы недоступны, создаем изображения программно
                 starEmpty = CreateEmptyStarImage();
                 starFilled = CreateFilledStarImage();
+            }
+        }
+
+        private Image LoadStarImage(string imageName)
+        {
+            try
+            {
+                // Пытаемся загрузить из ресурсов сборки
+                System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+                string resourcePath = $"FitnessManager.Resources.{imageName}";
+
+                using (var stream = asm.GetManifestResourceStream(resourcePath))
+                {
+                    if (stream != null)
+                        return Image.FromStream(stream);
+                }
+
+                // Если не получилось загрузить из ресурсов сборки, 
+                // пробуем загрузить из файла в папке Resources
+                string filePath = System.IO.Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Resources",
+                    imageName);
+
+                if (System.IO.File.Exists(filePath))
+                    return Image.FromFile(filePath);
+
+                // Если не удалось загрузить, создаем программно
+                throw new System.IO.FileNotFoundException($"Star image not found: {imageName}");
+            }
+            catch
+            {
+                // Если что-то пошло не так, возвращаем null 
+                // (будет создано программно позже)
+                return null;
             }
         }
 

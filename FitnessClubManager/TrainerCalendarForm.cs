@@ -85,13 +85,20 @@ namespace FitnessManager
                             AND s.Date = @Date";
 
                     // Фильтр по времени дня, если выбран
-                    string timeFilter = cmbTimeFilter.SelectedIndex switch
+                    string timeFilter = "";
+                    if (cmbTimeFilter.SelectedIndex == 1)
                     {
-                        1 => " AND s.StartTime BETWEEN '06:00:00' AND '12:00:00'", // Утро
-                        2 => " AND s.StartTime BETWEEN '12:00:00' AND '18:00:00'", // День
-                        3 => " AND s.StartTime BETWEEN '18:00:00' AND '23:00:00'", // Вечер
-                        _ => "" // Все часы
-                    };
+                        timeFilter = " AND s.StartTime BETWEEN '06:00:00' AND '12:00:00'"; // Утро
+                    }
+                    else if (cmbTimeFilter.SelectedIndex == 2)
+                    {
+                        timeFilter = " AND s.StartTime BETWEEN '12:00:00' AND '18:00:00'"; // День
+                    }
+                    else if (cmbTimeFilter.SelectedIndex == 3)
+                    {
+                        timeFilter = " AND s.StartTime BETWEEN '18:00:00' AND '23:00:00'"; // Вечер
+                    }
+                    // else - оставляем пустую строку для "Все часы"
 
                     query += timeFilter + " ORDER BY s.StartTime";
 

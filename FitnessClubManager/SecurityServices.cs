@@ -18,6 +18,7 @@ namespace FitnessManager
         /// <returns>BCrypt хеш пароля</returns>
         public static string HashPassword(string password)
         {
+            // Using BCrypt.Net-Next library
             return BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt(12));
         }
 

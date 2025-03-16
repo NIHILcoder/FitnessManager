@@ -6,8 +6,6 @@ using System.Windows.Forms;
 using System.Drawing;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using Npgsql.Internal;
 using System.ComponentModel;
 using System.Drawing.Printing;
@@ -128,7 +126,7 @@ namespace FitnessManager
                 if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
                     // Устанавливаем лицензию EPPlus для некоммерческого использования
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
                     using (ExcelPackage package = new ExcelPackage())
                     {
@@ -216,29 +214,32 @@ namespace FitnessManager
                     using (FileStream fs = new FileStream(saveDialog.FileName, FileMode.Create))
                     {
                         // Установка размера страницы А4 и поля
-                        Document document = new Document(PageSize.A4, 25, 25, 30, 30);
-                        PdfWriter writer = PdfWriter.GetInstance(document, fs);
+                        iTextSharp.text.Document document = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4, 25, 25, 30, 30);
+                        iTextSharp.text.pdf.PdfWriter writer = iTextSharp.text.pdf.PdfWriter.GetInstance(document, fs);
 
                         // Открываем документ для редактирования
                         document.Open();
 
                         // Добавляем заголовок отчета
-                        Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.DARK_GRAY);
-                        Paragraph titleParagraph = new Paragraph(title, titleFont);
-                        titleParagraph.Alignment = Element.ALIGN_CENTER;
+                        iTextSharp.text.Font titleFont = iTextSharp.text.FontFactory.GetFont(
+                            iTextSharp.text.FontFactory.HELVETICA_BOLD, 16, iTextSharp.text.BaseColor.DARK_GRAY);
+                        iTextSharp.text.Paragraph titleParagraph = new iTextSharp.text.Paragraph(title, titleFont);
+                        titleParagraph.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
                         document.Add(titleParagraph);
 
                         // Добавляем дату формирования
-                        Font dateFont = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10, BaseColor.DARK_GRAY);
-                        Paragraph dateParagraph = new Paragraph($"Дата формирования: {DateTime.Now:dd.MM.yyyy HH:mm:ss}", dateFont);
-                        dateParagraph.Alignment = Element.ALIGN_RIGHT;
+                        iTextSharp.text.Font dateFont = iTextSharp.text.FontFactory.GetFont(
+                            iTextSharp.text.FontFactory.HELVETICA_OBLIQUE, 10, iTextSharp.text.BaseColor.DARK_GRAY);
+                        iTextSharp.text.Paragraph dateParagraph = new iTextSharp.text.Paragraph(
+                            $"Дата формирования: {DateTime.Now:dd.MM.yyyy HH:mm:ss}", dateFont);
+                        dateParagraph.Alignment = iTextSharp.text.Element.ALIGN_RIGHT;
                         document.Add(dateParagraph);
 
                         // Добавляем пустую строку
-                        document.Add(new Paragraph(" "));
+                        document.Add(new iTextSharp.text.Paragraph(" "));
 
                         // Создаем таблицу
-                        PdfPTable table = new PdfPTable(dt.Columns.Count);
+                        iTextSharp.text.pdf.PdfPTable table = new iTextSharp.text.pdf.PdfPTable(dt.Columns.Count);
                         table.WidthPercentage = 100;
 
                         // Устанавливаем относительную ширину столбцов
@@ -250,30 +251,36 @@ namespace FitnessManager
                         table.SetWidths(widths);
 
                         // Добавляем заголовки столбцов
-                        Font headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE);
-                        BaseColor headerBackColor = new BaseColor(0, 122, 204); // Синий цвет
+                        iTextSharp.text.Font headerFont = iTextSharp.text.FontFactory.GetFont(
+                            iTextSharp.text.FontFactory.HELVETICA_BOLD, 10, iTextSharp.text.BaseColor.WHITE);
+                        iTextSharp.text.BaseColor headerBackColor = new iTextSharp.text.BaseColor(0, 122, 204); // Синий цвет
 
                         for (int i = 0; i < dt.Columns.Count; i++)
                         {
-                            PdfPCell cell = new PdfPCell(new Phrase(dt.Columns[i].ColumnName, headerFont));
+                            iTextSharp.text.pdf.PdfPCell cell = new iTextSharp.text.pdf.PdfPCell(
+                                new iTextSharp.text.Phrase(dt.Columns[i].ColumnName, headerFont));
                             cell.BackgroundColor = headerBackColor;
-                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            cell.HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER;
                             cell.Padding = 5;
                             table.AddCell(cell);
                         }
 
                         // Добавляем данные
-                        Font dataFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                        iTextSharp.text.Font dataFont = iTextSharp.text.FontFactory.GetFont(
+                            iTextSharp.text.FontFactory.HELVETICA, 10);
                         for (int r = 0; r < dt.Rows.Count; r++)
                         {
                             // Чередуем фон строк для удобства чтения
-                            BaseColor rowColor = (r % 2 == 0) ? new BaseColor(240, 240, 240) : BaseColor.WHITE;
+                            iTextSharp.text.BaseColor rowColor = (r % 2 == 0) ?
+                                new iTextSharp.text.BaseColor(240, 240, 240) :
+                                iTextSharp.text.BaseColor.WHITE;
 
                             for (int c = 0; c < dt.Columns.Count; c++)
                             {
-                                PdfPCell cell = new PdfPCell(new Phrase(dt.Rows[r][c].ToString(), dataFont));
+                                iTextSharp.text.pdf.PdfPCell cell = new iTextSharp.text.pdf.PdfPCell(
+                                    new iTextSharp.text.Phrase(dt.Rows[r][c].ToString(), dataFont));
                                 cell.BackgroundColor = rowColor;
-                                cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                cell.HorizontalAlignment = iTextSharp.text.Element.ALIGN_LEFT;
                                 cell.Padding = 5;
                                 table.AddCell(cell);
                             }
@@ -283,16 +290,20 @@ namespace FitnessManager
                         document.Add(table);
 
                         // Добавляем итоговую информацию
-                        document.Add(new Paragraph(" "));
-                        Font summaryFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
-                        Paragraph summaryParagraph = new Paragraph($"Всего записей: {dt.Rows.Count}", summaryFont);
-                        summaryParagraph.Alignment = Element.ALIGN_LEFT;
+                        document.Add(new iTextSharp.text.Paragraph(" "));
+                        iTextSharp.text.Font summaryFont = iTextSharp.text.FontFactory.GetFont(
+                            iTextSharp.text.FontFactory.HELVETICA_BOLD, 10);
+                        iTextSharp.text.Paragraph summaryParagraph = new iTextSharp.text.Paragraph(
+                            $"Всего записей: {dt.Rows.Count}", summaryFont);
+                        summaryParagraph.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
                         document.Add(summaryParagraph);
 
                         // Добавляем информацию о системе
-                        Font footerFont = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 8, BaseColor.GRAY);
-                        Paragraph footerParagraph = new Paragraph($"Отчет сгенерирован системой \"ActiveLife\" • {DateTime.Now:yyyy-MM-dd}", footerFont);
-                        footerParagraph.Alignment = Element.ALIGN_CENTER;
+                        iTextSharp.text.Font footerFont = iTextSharp.text.FontFactory.GetFont(
+                            iTextSharp.text.FontFactory.HELVETICA_OBLIQUE, 8, iTextSharp.text.BaseColor.GRAY);
+                        iTextSharp.text.Paragraph footerParagraph = new iTextSharp.text.Paragraph(
+                            $"Отчет сгенерирован системой \"ActiveLife\" • {DateTime.Now:yyyy-MM-dd}", footerFont);
+                        footerParagraph.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
                         document.Add(footerParagraph);
 
                         // Закрываем документ
